@@ -131,7 +131,8 @@ conda create -n resume-llm python=3.11 &&
 source activate resume-llm &&
 conda install ipykernel jupyter &&
 python -m ipykernel install --user --name=resume-llm --display-name "Resume LLM Enviroment (resume-llm)"
-pip3 install pypandoc
+pip3 install pypandoc python-docx pdfplumber nltk scikit-learn sentence-transformers spacy
+conda install -c conda-forge cryptography pdfplumber
  
 ```
 
