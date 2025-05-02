@@ -67,12 +67,12 @@ def generate_profile():
         })
 
     # Job history
-    num_jobs = random.randint(1, 6)
+    num_jobs = random.randint(1, 5)
     job_history = []
     for _ in range(num_jobs):
         job_title = random.choice(job_titles).title()
         company = random.choice(companies)
-        years = random.randint(1, 20)
+        years = random.randint(1, 15)
         job_history.append({
             "job_title": job_title,
             "company": company,
@@ -90,7 +90,7 @@ def generate_profile():
         "location": location,
         "education": education,
         "job_history": job_history,
-        "skills": random.sample(skills, k=random.randint(5, 10))
+        "skills": random.sample(skills, k=random.randint(8, 30))
     }
     return profile
 
