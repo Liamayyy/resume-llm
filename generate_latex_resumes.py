@@ -42,7 +42,7 @@ def _profile_to_plaintext(p: dict) -> str:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--model", default="codellama/CodeLlama-7b-Instruct-hf", #or meta-llama/Llama-2-13b-chat-hf
+    ap.add_argument("--model", default="meta-llama/Llama-2-13b-chat-hf",
                     help="HF model repo or local path")
     ap.add_argument("--max-new-tokens", type=int, default=512)
     args = ap.parse_args()
@@ -59,22 +59,22 @@ def main():
     for prof in profiles:
         plain = _profile_to_plaintext(prof)
         prompt = (
-            "You are an expert technical résumé writer.\n"
-            "Given the following applicant information, format a professional résumé "
+            "You are an expert technical resume writer.\n"
+            "Given the following applicant information, format a professional resume "
             "in **LaTeX** suitable for PDF production (use the article class or "
             "moderncv—your choice).  The output must be valid compilable LaTeX and "
-            "should not include any explanations—**only LaTeX code**.\n\n"
-            "Applicant information ↓↓↓\n"
+            "should not include any explanations, **Only provide LaTeX code, no other text**.\n\n"
+            "Applicant information:\n"
             f"{plain}\n\n"
-            "LaTeX résumé:\n"
+            "LaTeX resume:\n"
         )
 
-        print(f"🖋  Generating LaTeX for {prof['first_name']} {prof['last_name']} …")
+        print(f"Generating LaTeX for {prof['first_name']} {prof['last_name']} …")
         out = pipe(prompt, max_new_tokens=args.max_new_tokens,
                    temperature=0.7, top_p=0.9, do_sample=True)[0]["generated_text"]
 
         # strip the prompt portion that the model echoes back, keep LaTeX only
-        latex = out.split("LaTeX résumé:")[-1].lstrip()
+        latex = out.split("LaTeX resume:")[-1].lstrip()
         slug = f"{prof['first_name']}_{prof['last_name']}".lower().replace(" ", "_")
         tex_path = BUILD_DIR / f"{slug}.tex"
         tex_path.write_text(latex)
