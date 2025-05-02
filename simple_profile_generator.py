@@ -102,4 +102,4 @@ def create_profiles(num_profiles=100, output_path='./applicant_profiles.json'):
     print(f"{num_profiles} profiles saved to {output_path}")
 
 # Example usage:
-create_profiles(num_profiles=50)
+create_profiles(num_profiles=5)
