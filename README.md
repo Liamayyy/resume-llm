@@ -130,13 +130,13 @@ module load Miniconda3 &&
 conda create -n resume-llm python=3.11 &&
 source activate resume-llm &&
 conda install ipykernel jupyter &&
-python -m ipykernel install --user --name=resume-llm --display-name "Resume LLM Enviroment (resume-llm)"
-pip3 install accelerate torch transformers sentence-transformers pypandoc python-docx pdfplumber spacy nltk 
+python -m ipykernel install --user --name=resume-llm --display-name "Resume LLM Enviroment (resume-llm)" &&
+pip3 install accelerate torch transformers sentence-transformers trl pypandoc python-docx pdfplumber spacy nltk scikit-learn tensorboard
 ```
 
 You might also need this line?
 ```
-conda install -c conda-forge cryptography pdfplumber
+python -m spacy download en_core_web_sm
 ```
 
 # Cluster Node Installation Requirements
