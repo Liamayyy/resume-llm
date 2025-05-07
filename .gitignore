@@ -2,3 +2,4 @@ pandoc-3.6.4-1-amd64.deb
 resumes/
 job_descriptions/
 build/
+__pycache__/
