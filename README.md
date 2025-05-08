@@ -80,11 +80,6 @@ This will give you guidance on what you can do with each one.
 
 Here we will outline a few general steps for setting up the cluster.
 
-## Install Jupyter Extension for VSCode:
-
-Make sure to install the necessary VSCode Jupyter extension so that you will have access to a Jupyter kernel to run your code on.
-
-
 ## Hugging Face CLI
 For much of the code in this repository, you will have to create a HuggingFace account if you have not already. Once you have an account, you can request access to gated repositories and create access tokens. When creating the access token for the fine-tuning or mech-interp step make sure to have the option "Read access to contents of all public gated repos you can access" enabled. Make sure to save you token in a secure location for future use, as for each session that you use huggingface, you will have to log in to their cli. After completing these steps, you will be able to log in to HuggingFace using the following command:
 ```
@@ -93,26 +88,6 @@ huggingface-cli login
 It will prompt you for your access token, and after entering it, you should be able to use axolotl to access gated models like gemma-2-2b.
 
 Note: When prompted if you want to add the token as a git credential, I select no, as this may complicate things later down the line.
-
-## Using Jupyter on the Compute Cluster (Not Finished Yet):
-I personally like running the code on a normal python file to avoid uncessary complications, however, if you would like to use a notebook, you can with the following instructions:
-
-First, make sure to install the necessary VSCode Jupyter extension so that you will have access to a Jupyter kernel to run your code on.
-
-You should be able to run a Jupyter Notebook on our newly created Conda enviroment, but if you cannot select it, please complete the following steps:
-1. Open the Command Palette (Ctrl+Shift+P or Cmd+Shift+P on macOS).​
-2. Type and select Python: Select Interpreter.​
-3. Choose Fine-Tuning Enviroment (fine-tuning) from the list. 
-4. If it does not appear on the list, click on Enter interpreter path, select Find, and navigate to the `~/.conda/envs/fine-tuning/bin/python`,  your Conda environment.
-
-Then, run these commands (in the background):
-```
-jupyter notebook --no-browser --port=8899
-ssh -N -L 8888:localhost:8888 <pid>@tinkercliffs2.arc.vt.edu &
-```
-```
-kill %2 && kill %1
-```
 
 ## Clone Repositories:
 You will have to clone a few different repositories in different locations in order to run our code and ensure everything fits together nicely in your enviroment. Running this from your home directory will ensure that this repository is installed in the right place.
@@ -129,9 +104,7 @@ source ~/.bashrc &&
 module load Miniconda3 &&
 conda create -n resume-llm python=3.11 &&
 source activate resume-llm &&
-conda install ipykernel jupyter &&
-python -m ipykernel install --user --name=resume-llm --display-name "Resume LLM Enviroment (resume-llm)" &&
-pip3 install accelerate torch transformers sentence-transformers trl pypandoc python-docx pdfplumber spacy nltk scikit-learn tensorboard
+pip3 install accelerate torch transformers sentence-transformers trl pypandoc python-docx pdfplumber spacy nltk scikit-learn
 ```
 
 You might also need this line?
@@ -153,16 +126,16 @@ module load Miniconda3 &&
 source activate resume-llm
 ```
 
+# Code Setup:
+The code is setup into three main scripts:
+1. generate_resumes.py: This script takes in a random job description from the job description list for each profile in the profile list and generates a latex resume. We then try to compile the latex code into a .docx file.
+2. ats_scoring: Uses a encoder only transformer modela and other metrics to produce a score for the resume. We only produce a score for .docx files, not latex outputs.
+3. run_pipeline.py: This connects these first two files to get everything running together.
 
-## Hard Reset:
-To reset everything you have done on ARC (for the most part), you can run the following commands:
+## Running The Code:
+You can run the code using this command:
 ```
-conda env remove --name fine-tuning
-rm -rf .cache/ .local/ team5-capstone/ .ipython/ .dotnet/ .conda/ .jupyter/ .lesshst/ .triton/ .nv/
+python run_pipeline.py --profiles cleaned_data/applicant_profiles.json --jobs cleaned_data/filtered_jobs.json
 ```
 
-Reminder: to eventually remove any conda enviroment, you can do the following:
 
-```
-conda env remove --name fine-tuning (or another enviroment name)
-```
